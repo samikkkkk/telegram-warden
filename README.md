@@ -145,5 +145,6 @@ python3 main.py
 ```bash
 docker-compose up -d
 ```
+</details>
 
 ## Don't forget to start a conversation with your created bot, otherwise the logs won't be sent
