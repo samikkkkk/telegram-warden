@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  warden-chatbot:
+    build: .
+    container_name: telegram-warden
+    env_file:
+      - .env
+    volumes:
+      - ./data:/usr/telegram-warden/data
+    restart: unless-stopped
