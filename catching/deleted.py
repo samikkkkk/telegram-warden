@@ -58,7 +58,7 @@ async def handle_deleted_messages(msg: BusinessMessagesDeleted):
                             f"<b>ID:</b> {msg.chat.id}\n"
                             f"<b>Nickname:</b> {msg.chat.first_name} {msg.chat.last_name}\n"
                             f"<b>Username:</b> @{msg.chat.username}\n\n"
-                            f"<b>Caption:</b>\n<blockquote>{message.caption or "No"}</blockquote>\n\n"
+                            f"<b>Caption:</b>\n<blockquote>{msg.caption or 'No'}</blockquote>\n\n"
                             f"<tg-spoiler>Photo attached above.</tg-spoiler>",
                             parse_mode="HTML",
                         )
@@ -77,7 +77,7 @@ async def handle_deleted_messages(msg: BusinessMessagesDeleted):
                             f"<b>ID:</b> {msg.chat.id}\n"
                             f"<b>Nickname:</b> {msg.chat.first_name} {msg.chat.last_name}\n"
                             f"<b>Username:</b> @{msg.chat.username}\n\n"
-                            f"<b>Caption:</b>\n<blockquote>{message.caption or "No"}</blockquote>\n\n"
+                            f"<b>Caption:</b>\n<blockquote>{message.caption or 'No'}</blockquote>\n\n"
                             f"<tg-spoiler>Document attached above.</tg-spoiler>",
                             parse_mode="HTML",
                         )
