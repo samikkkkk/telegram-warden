@@ -51,7 +51,7 @@ class Update(models.Model):
 
 async def init_db():
     await Tortoise.init(
-        db_url=Config.DB_URL, modules={"models": ["database.structure"]}
+        Config.TORTOISE_CONFIG
     )
 
     await Tortoise.generate_schemas()

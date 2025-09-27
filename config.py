@@ -5,7 +5,19 @@ from aiogram import Bot
 class Config:
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     OWNER_ID = os.getenv("OWNER_ID")
-    DB_URL = os.getenv("DATABASE_URL")
+    TORTOISE_CONFIG = {
+    "connections": {
+        "default": "sqlite:///app/data/db.sqlite3"
+        },
+        
+    "apps": {
+        "models": {
+            "models": ["database.structure"],
+            "default_connection": "default",
+        },
+    },
+}
+
 
     bot = Bot(BOT_TOKEN)
     
