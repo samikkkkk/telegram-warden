@@ -4,7 +4,6 @@ from aiogram.types import Message
 from config import Config
 from database.requests import SaveMessage
 
-bot = Config.bot
 catch_video = Router()
 
 

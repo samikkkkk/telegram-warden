@@ -7,7 +7,6 @@ from loguru import logger
 from config import Config
 from database.requests import GetMessage, SaveMessage, UpdateAction
 
-bot = Config.bot
 catch_photo = Router()
 
 
