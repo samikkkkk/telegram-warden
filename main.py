@@ -35,8 +35,6 @@ async def on_startup(bot: Bot):
         await bot.session.close()
         return
 
-    await init_db()
-
     # Регистрация роутеров
     dp.include_router(catch_destructing)
     dp.include_router(catch_deleted)
@@ -57,6 +55,8 @@ async def on_shutdown(bot: Bot):
 async def main():
     bot = Bot(token=Config.BOT_TOKEN)
 
+    await init_db()
+
     try:
         await dp.start_polling(
             bot,
@@ -74,8 +74,6 @@ def signal_handler(signum, frame):
     sys.exit(0)
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
