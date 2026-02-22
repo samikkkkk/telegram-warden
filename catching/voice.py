@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Bot, Router, F
 from aiogram.types import Message
 from aiogram.exceptions import TelegramForbiddenError
 
@@ -12,7 +12,7 @@ catch_voice = Router()
 
 
 @catch_voice.business_message(F.voice)
-async def msg(msg: Message):
+async def msg(msg: Message, bot: Bot):
     # print(f'{msg}')
 
     saver = SaveMessage(
@@ -28,7 +28,7 @@ async def msg(msg: Message):
 
 
 @catch_voice.edited_business_message(F.voice)
-async def edit_msg(msg: Message):
+async def edit_msg(msg: Message, bot: Bot):
     getter = GetMessage(msg.message_id)
     found, message = await getter.get_voice()
 

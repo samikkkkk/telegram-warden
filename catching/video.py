@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Bot, Router, F
 from aiogram.types import Message
 
 from config import Config
@@ -9,7 +9,7 @@ catch_video = Router()
 
 
 @catch_video.business_message(F.video_note)
-async def msg(msg: Message):
+async def msg(msg: Message, bot: Bot):
 
     saver = SaveMessage(
         type="video",

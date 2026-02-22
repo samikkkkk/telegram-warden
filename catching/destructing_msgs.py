@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram.types import Message, FSInputFile
 from aiogram.exceptions import TelegramForbiddenError
 
@@ -10,7 +10,6 @@ from loguru import logger
 from config import Config
 from utils.get_file import get_file
 
-bot = Config.bot
 catch_destructing = Router()
 
 """
@@ -25,7 +24,7 @@ and then we send its log locally from the device before deleting it.
 @catch_destructing.business_message(
     F.reply_to_message.has_protected_content == True, F.reply_to_message.photo
 )
-async def photo(msg: Message):
+async def photo(msg: Message, bot: Bot):
 
     if msg.reply_to_message.photo:
         path = await get_file(msg.reply_to_message.photo[-1].file_id, bot)
@@ -55,7 +54,7 @@ async def photo(msg: Message):
 @catch_destructing.business_message(
     F.reply_to_message.has_protected_content == True, F.reply_to_message.video_note
 )
-async def video_note(msg: Message):
+async def video_note(msg: Message, bot: Bot):
     if msg.reply_to_message.video_note:
         path = await get_file(msg.reply_to_message.video_note.file_id, bot)
         new_time = msg.reply_to_message.date + timedelta(hours=3)
@@ -85,7 +84,7 @@ async def video_note(msg: Message):
 @catch_destructing.business_message(
     F.reply_to_message.has_protected_content == True, F.reply_to_message.voice
 )
-async def voice(msg: Message):
+async def voice(msg: Message, bot: Bot):
     if msg.reply_to_message.voice:
         path = await get_file(msg.reply_to_message.voice.file_id, bot)
         new_time = msg.reply_to_message.date + timedelta(hours=3)
@@ -114,7 +113,7 @@ async def voice(msg: Message):
 @catch_destructing.business_message(
     F.reply_to_message.has_protected_content == True, F.reply_to_message.video
 )
-async def video(msg: Message):
+async def video(msg: Message, bot: Bot):
     if msg.reply_to_message.video:
         path = await get_file(msg.reply_to_message.video.file_id, bot)
         new_time = msg.reply_to_message.date + timedelta(hours=3)

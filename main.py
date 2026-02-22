@@ -3,7 +3,7 @@ import signal
 import sys
 
 from loguru import logger
-from aiogram import Dispatcher
+from aiogram import Bot, Dispatcher
 
 from catching.doc import catch_doc
 from catching.text import catch_text
@@ -16,15 +16,13 @@ from catching.destructing_msgs import catch_destructing
 from config import Config
 from database.structure import close_db, init_db
 
-bot = Config.bot
 dp = Dispatcher()
 
 @dp.startup()
-async def on_startup():
+async def on_startup(bot: Bot):
     logger.debug("Start initialization")
 
     me = await bot.get_me()
-
     logger.info(
         f"\nBot @{me.username} initialized\n"
         f"Bot ID: {me.id}\n"
@@ -32,53 +30,36 @@ async def on_startup():
         f"Bot BusinessMode: {me.can_connect_to_business}"
     )
 
-    if me.can_connect_to_business == False:
-        logger.error(
-            "Bot cant connect to business! Turn ON business mode in @BotFather"
-        )
+    if not me.can_connect_to_business:
+        logger.error("Turn ON business mode in @BotFather")
         await bot.session.close()
         return
 
     await init_db()
 
-    # Without message-object
+    # Регистрация роутеров
     dp.include_router(catch_destructing)
-    logger.success("[INIT][ROUTERS] Destructing messages initialized")
-
     dp.include_router(catch_deleted)
-    logger.success("[INIT][ROUTERS] Deleted messages initialized")
-
-    # default types
     dp.include_router(catch_photo)
-    logger.success("[INIT][ROUTERS] Photo messages initialized")
-
     dp.include_router(catch_doc)
-    logger.success("[INIT][ROUTERS] Doc messages initialized")
-
     dp.include_router(catch_voice)
-    logger.success("[INIT][ROUTERS] Voice messages initialized")
-
     dp.include_router(catch_video)
-    logger.success("[INIT][ROUTERS] Video messages initialized")
-
     dp.include_router(catch_text)
-    logger.success("[INIT][ROUTERS] Text messages initialized")
+
+    logger.success("[INIT] All routers registered")
 
 @dp.shutdown()
-async def on_shutdown():
+async def on_shutdown(bot: Bot):
     logger.info("Starting shutdown...")
-    
-    try:
-        await close_db()
-    except Exception as e:
-        logger.warning(f"Error while closing DB connections: {e}")
-
-    logger.debug('Shutdown completed')
+    await close_db()
+    logger.debug("Shutdown completed")
 
 async def main():
+    bot = Bot(token=Config.BOT_TOKEN)
+
     try:
         await dp.start_polling(
-            bot, 
+            bot,
             handle_signals=True,
             close_bot_session=True,
             allowed_updates=dp.resolve_used_update_types()
@@ -86,18 +67,15 @@ async def main():
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
     finally:
+        await bot.session.close()
         logger.info("Cleanup completed")
 
 def signal_handler(signum, frame):
     sys.exit(0)
 
 if __name__ == "__main__":
-    """
-    Try to graceful-shutdown
-    """
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    
     try:
         asyncio.run(main())
     except KeyboardInterrupt:

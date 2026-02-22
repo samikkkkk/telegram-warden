@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import Router, Bot
 from aiogram.types.business_messages_deleted import BusinessMessagesDeleted
 from aiogram.exceptions import TelegramForbiddenError
 
@@ -7,12 +7,11 @@ from loguru import logger
 from config import Config
 from database.requests import GetMessage
 
-bot = Config.bot
 catch_deleted = Router()
 
 
 @catch_deleted.deleted_business_messages()
-async def handle_deleted_messages(msg: BusinessMessagesDeleted):
+async def handle_deleted_messages(msg: BusinessMessagesDeleted, bot: Bot):
     me = await bot.get_me()
 
     for message_id in msg.message_ids:
